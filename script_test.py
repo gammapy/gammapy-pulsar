@@ -2,8 +2,9 @@ import matplotlib.pyplot as plt
 from gammapy.maps import MapAxis
 from gammapy.modeling import Fit
 from gammapy.modeling.models import Models
-from pulstats import CountsDataset, CountsMap, LorentzianPhaseModel, SkyModelPhase
 from scipy.stats import cauchy
+
+from gammapypulsar import CountsDataset, CountsMap, LorentzianPhaseModel, SkyModelPhase
 
 phases = MapAxis.from_bounds(0, 1, 500, interp="lin", name="phase")
 data = cauchy.pdf(phases.center, loc=0.5, scale=0.1)

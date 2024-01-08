@@ -4,7 +4,8 @@ from astropy.table import Table
 from gammapy.maps import MapAxis
 from gammapy.modeling import Fit
 from gammapy.modeling.models import Models
-from pulstats import (
+
+from gammapypulsar import (
     AsymmetricLorentzianPhaseModel,
     CountsDataset,
     CountsMap,

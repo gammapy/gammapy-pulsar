@@ -1,4 +1,4 @@
-from .dataset import CountsDataset, CountsMap
+from .dataset import CountsDataset
 from .models import (
     AsymmetricLorentzianPhaseModel,
     CompoundPhaseModel,
@@ -18,5 +18,4 @@ __all__ = [
     "CompoundPhaseModel",
     "LogNormalPhaseModel",
     "CountsDataset",
-    "CountsMap",
 ]

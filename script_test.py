@@ -1,18 +1,18 @@
 import matplotlib.pyplot as plt
-from gammapy.maps import MapAxis
+from gammapy.maps import MapAxis, RegionGeom
 from gammapy.modeling import Fit
 from gammapy.modeling.models import Models
 from scipy.stats import cauchy
 
-from gammapypulsar import CountsDataset, CountsMap, LorentzianPhaseModel, SkyModelPhase
+from gammapypulsar import CountsDataset, LorentzianPhaseModel, SkyModelPhase
 
 phases = MapAxis.from_bounds(0, 1, 500, interp="lin", name="phase")
 data = cauchy.pdf(phases.center, loc=0.5, scale=0.1)
 
+geom = RegionGeom(region=None, axes=[phases])
 
-counts = CountsMap(data=data, axes=[phases])
-
-counts_dataset = CountsDataset(counts=counts)
+counts_dataset = CountsDataset.create(geom=geom)
+counts_dataset.counts.data = data
 
 model = LorentzianPhaseModel(amplitude=1, center=0.4, width=0.2)
 sky_model = SkyModelPhase(phase_model=model, name="test")

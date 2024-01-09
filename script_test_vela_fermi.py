@@ -1,21 +1,23 @@
 import matplotlib.pyplot as plt
 import numpy as np
 from astropy.table import Table
-from gammapy.maps import MapAxis
+from gammapy.maps import MapAxis, RegionGeom
 from gammapy.modeling import Fit
 from gammapy.modeling.models import Models
+from gammapy.utils.scripts import make_path
 
 from gammapypulsar import (
     AsymmetricLorentzianPhaseModel,
     CountsDataset,
-    CountsMap,
     LogNormalPhaseModel,
     SkyModelPhase,
 )
 
-table = Table.read(
+filename = make_path(
     "$GAMMAPY_DATA/catalogs/fermi/3PC_auxiliary_20230728/J0835-4510_3PC_data.fits.gz"
 )
+
+table = Table.read(filename)
 table = table[: int(len(table) / 2)]
 
 # [int(0.18*len(table)):int(0.4*len(table))] to only have the bridge
@@ -26,9 +28,11 @@ phases = MapAxis.from_edges(phase_tot, interp="lin", name="phase")
 
 data = table["300_1000_WtCt"]
 
-counts = CountsMap(data=data, axes=[phases])
+geom = RegionGeom(region=None, axes=[phases])
+counts_dataset = CountsDataset.create(geom=geom)
+counts_dataset.counts.data = data
 
-counts_dataset = CountsDataset(counts=counts)
+print(counts_dataset)
 
 model1 = AsymmetricLorentzianPhaseModel(
     amplitude=8000, center=0.13, width_1=0.006, width_2=0.03
@@ -56,13 +60,19 @@ print(counts_dataset.models)
 fit = Fit()
 result = fit.run(counts_dataset)
 print(result)
+print(result.covariance_result)
 for param in counts_dataset.models.parameters:
     print(param.name, param.value, param.error)
 
+
+print(counts_dataset.models[0].parameters["amplitude"])
+
+print(counts_dataset.npred().data)
+
 ax = plt.gca()
-counts_dataset.counts.plot(ax=ax, label="Counts")
 counts_dataset.models[0].phase_model.plot(ax=ax, label="Model")
 counts_dataset.models[0].phase_model.plot_error(ax=ax, label="error")
+counts_dataset.counts.plot(ax=ax, label="Counts")
 plt.legend()
 plt.show()
 

@@ -21,6 +21,23 @@ __all__ = [
 
 
 class SkyModelPhase(ModelBase):
+    """Sky model for phase resolved analysis.
+
+    Note: This class is needed if one wants to only fit phase defined models because
+    the SkyModel class from gammapy.modeling.models request a SpectralModel.
+
+    Parameters
+    ----------
+    phase_model : `PhaseModel`
+        Phase model
+    name : str
+        Sky model name
+    datasets_names : str
+        Dataset name
+    covariance_data : `~gammapy.modeling.Covariance`
+        Covariance data
+    """
+
     def __init__(
         self, phase_model, name=None, datasets_names=None, covariance_data=None
     ):
@@ -108,6 +125,8 @@ class SkyModelPhase(ModelBase):
 
 
 class PhaseModel(ModelBase):
+    """Phase model base class"""
+
     _type = "phase"
 
     def __call__(self, phase):
@@ -214,7 +233,7 @@ class PhaseModel(ModelBase):
 
 
 class CompoundPhaseModel(PhaseModel):
-    """"""
+    """Compound phase model. This class is used to combine different phase models."""
 
     tag = ["CompoundPhaseModel", "compoundphase"]
 
@@ -273,7 +292,7 @@ class CompoundPhaseModel(PhaseModel):
 
 
 class ConstantPhaseModel(PhaseModel):
-    """"""
+    """Constant phase model."""
 
     tag = ["ConstantPhaseModel", "constphase"]
     const = Parameter("const", 1, is_norm=True)
@@ -285,7 +304,7 @@ class ConstantPhaseModel(PhaseModel):
 
 
 class LorentzianPhaseModel(PhaseModel):
-    """"""
+    """Lorentzian phase model."""
 
     tag = ["LorentzianPhaseModel", "lor"]
     amplitude = Parameter("amplitude", 1, is_norm=True)
@@ -299,7 +318,7 @@ class LorentzianPhaseModel(PhaseModel):
 
 
 class AsymmetricLorentzianPhaseModel(PhaseModel):
-    """"""
+    """Asymmetric Lorentzian phase model."""
 
     tag = ["AsymmetricLorentzianPhaseModel", "asymlor"]
     amplitude = Parameter("amplitude", 1, is_norm=True)
@@ -316,7 +335,7 @@ class AsymmetricLorentzianPhaseModel(PhaseModel):
 
 
 class LogNormalPhaseModel(PhaseModel):
-    """"""
+    """LogNormal phase model."""
 
     tag = ["LogNormalPhaseModel", "lognorm"]
     amplitude = Parameter("amplitude", 1, is_norm=True)
@@ -335,6 +354,8 @@ class LogNormalPhaseModel(PhaseModel):
     @classmethod
     def from_expected(cls, amplitude, center, width):
         """Create a lognormal model from expected values.
+
+        FIXME: This is not a good solution because center and width are correlated.
 
         Parameters
         ----------

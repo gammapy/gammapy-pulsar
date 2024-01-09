@@ -166,7 +166,7 @@ class CountsDataset(Dataset):
 
     def stat_sum(self):
         # TODO: implement prior
-        """Total statistic function value given the curent parameters."""
+        """Total statistic function value given the current parameters."""
 
         counts = self.counts.data.astype(float)
         npred = self.npred().data.astype(float)
